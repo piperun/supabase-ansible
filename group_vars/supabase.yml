@@ -1,0 +1,10 @@
+supabase_postgres_host: "db"
+supabase_postgres_password: ""
+supabase_postgres_db: "postgres"
+supabase_postgres_port: 5432
+supabase_anon_key: ""
+supabase_service_role_key: ""
+supabase_google_project_id: "GOOGLE_PROJECT_ID"
+supabase_google_project_number: "GOOGLE_PROJECT_NUMBER"
+server_user: "username"
+server_group: "group"

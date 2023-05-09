@@ -1,0 +1,35 @@
+---
+# tasks file for supabase
+- name: Install Git
+  package:
+    name:
+      - git
+      - podman
+    state: present
+
+- name: Clone Supabase repository
+  become: true
+  git:
+    repo: https://github.com/supabase/supabase
+    dest: "{{ supabase_path }}"
+    depth: 1
+
+- name: Copy supabase configuration file
+  copy:
+    src: "{{ supabase_path }}/docker/.env.example"
+    dest: "{{ supabase_path }}/docker/.env"
+
+- name: Generate Supabase .env file
+  ansible.builtin.template:
+    src: .env.j2
+    dest: "{{ supabase_path }}/docker/.env"
+    owner: "{{server_user}}"
+    group: "{{server_group}}"
+    mode: "0600"
+
+- name: Start Supabase instance using podman
+  become: true
+  podman_compose:
+    project_name: supabase
+    file: "{{ supabase_path }}/docker/docker-compose.yml"
+    state: started
