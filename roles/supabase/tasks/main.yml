@@ -1,35 +1,39 @@
 ---
 # tasks file for supabase
-- name: Install Git
+- name: Install Git, Podman and Epel
+  become: true
   package:
     name:
+      - epel-release
       - git
       - podman
     state: present
 
+- name: Install podman compose
+  become: true
+  ansible.builtin.package:
+    name:
+      - podman-compose
+    state: present
+
 - name: Clone Supabase repository
   become: true
-  git:
+  ansible.builtin.git:
     repo: https://github.com/supabase/supabase
     dest: "{{ supabase_path }}"
     depth: 1
 
-- name: Copy supabase configuration file
-  copy:
-    src: "{{ supabase_path }}/docker/.env.example"
-    dest: "{{ supabase_path }}/docker/.env"
-
 - name: Generate Supabase .env file
+  become: true
   ansible.builtin.template:
-    src: .env.j2
+    src: "templates/supabase_env.j2"
     dest: "{{ supabase_path }}/docker/.env"
-    owner: "{{server_user}}"
-    group: "{{server_group}}"
+    owner: "{{ server_user }}"
+    group: "{{ server_group }}"
     mode: "0600"
 
-- name: Start Supabase instance using podman
-  become: true
-  podman_compose:
-    project_name: supabase
-    file: "{{ supabase_path }}/docker/docker-compose.yml"
-    state: started
+- name: Start Supabase instance using podman-compose
+  #become: true
+  shell: "podman-compose -f {{ supabase_path }}/docker/docker-compose.yml up -d"
+  args:
+    executable: /bin/bash
