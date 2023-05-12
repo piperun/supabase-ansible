@@ -1,3 +1,7 @@
 # Ignore group_vars files
 supabases.yml
 !supabases.yml.example
+
+# Ignore inventory
+inventory
+!inventory.example
