@@ -1,0 +1,17 @@
+supabase_site_url: "SITE_URL"
+supabase_api_external_url: "API_EXTERNAL_URL"
+supabase_public_url: "PUBLIC_URL"
+supabase_postgres_password: "POSTGRE_PASSWORD"
+supabase_postgres_host: "db"
+supabase_postgres_db: "postgres"
+supabase_postgres_port: 5432
+# JWT
+supabase_jwt_secret: "JWT_SECRET"
+supabase_anon_key: "ANON_KEY"
+supabase_service_role_key: "SERVICE_ROLE_KEY"
+# Google
+supabase_google_project_id: "GOOGLE_PROJECT_ID"
+supabase_google_project_number: "GOOGLE_PROJECT_NUMBER"
+# Misc
+server_user: "flynn"
+server_group: "flynn"
