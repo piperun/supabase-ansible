@@ -1,4 +1,4 @@
 ---
 # vars file for supabase
----
+
 supabase_path: "/opt/supabase"
