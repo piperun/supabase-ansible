@@ -38,15 +38,6 @@
     group: "{{ server_group }}"
     mode: "0600"
 
-- name: Set ownership and permissions recursively on /opt/supabase
-  become: true
-  file:
-    path: "{{ supabase_path }}"
-    owner: "{{ server_user }}"
-    group: "{{ server_group }}"
-    mode: "0755"
-    recurse: yes
-
 - name: Generate Supabase kong yaml
   become: true
   ansible.builtin.template:
@@ -56,6 +47,15 @@
     group: "{{ server_group }}"
     mode: "0755"
     backup: yes
+
+- name: Set ownership and permissions recursively on /opt/supabase
+  become: true
+  file:
+    path: "{{ supabase_path }}"
+    owner: "{{ server_user }}"
+    group: "{{ server_group }}"
+    mode: "0755"
+    recurse: yes
 
 - name: Start Supabase instance using podman-compose
   #become: true
