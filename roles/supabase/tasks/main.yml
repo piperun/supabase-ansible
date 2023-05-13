@@ -1,18 +1,23 @@
 ---
-# tasks file for supabase
-- name: Install Git, Podman and Epel
-  become: true
-  package:
-    name:
-      - epel-release
-      - git
-      - podman
-    state: present
+- name: Show facts available on the system
+  ansible.builtin.debug:
+    var: ansible_facts
 
-- name: Install podman compose
+# tasks file for supabase
+- name: Install EPEL if Red hat
   become: true
   ansible.builtin.package:
     name:
+      - epel-release
+    state: present
+  when: ansible_facts['os_family'] == "RedHat" and ansible_facts['distribution'] != "Fedora"
+
+- name: Install Git, Podman, Podman compose
+  become: true
+  ansible.builtin.package:
+    name:
+      - git
+      - podman
       - podman-compose
     state: present
 
@@ -22,6 +27,7 @@
     repo: https://github.com/supabase/supabase
     dest: "{{ supabase_path }}"
     depth: 1
+    force: yes
 
 - name: Generate Supabase .env file
   become: true
@@ -32,8 +38,27 @@
     group: "{{ server_group }}"
     mode: "0600"
 
+- name: Set ownership and permissions recursively on /opt/supabase
+  become: true
+  file:
+    path: "{{ supabase_path }}"
+    owner: "{{ server_user }}"
+    group: "{{ server_group }}"
+    mode: "0755"
+    recurse: yes
+
+- name: Generate Supabase kong yaml
+  become: true
+  ansible.builtin.template:
+    src: "templates/kong.yml"
+    dest: "{{ supabase_path }}/docker/volumes/api/kong.yml"
+    owner: "{{ server_user }}"
+    group: "{{ server_group }}"
+    mode: "0755"
+    backup: yes
+
 - name: Start Supabase instance using podman-compose
   #become: true
-  shell: "podman-compose -f {{ supabase_path }}/docker/docker-compose.yml up -d"
+  shell: "podman-compose --env-file {{ supabase_path }}/docker/.env  -f {{ supabase_path }}/docker/docker-compose.yml up -d"
   args:
     executable: /bin/bash
