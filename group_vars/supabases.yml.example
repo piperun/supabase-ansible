@@ -7,8 +7,8 @@ supabase_postgres_db: "postgres"
 supabase_postgres_port: 5432
 # JWT
 supabase_jwt_secret: "JWT_SECRET"
-supabase_anon_key: "ANON_KEY"
-supabase_service_role_key: "SERVICE_ROLE_KEY"
+anon_key: "ANON_KEY"
+service_key: "SERVICE_ROLE_KEY"
 # Google
 supabase_google_project_id: "GOOGLE_PROJECT_ID"
 supabase_google_project_number: "GOOGLE_PROJECT_NUMBER"
